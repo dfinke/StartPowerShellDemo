@@ -3,7 +3,7 @@ function ConvertClipboardTo-Markdown {
         [Switch]$UseSpacesForCodeBlocks,
         [Switch]$CopyToClipboard
     )
-    
+
 filter cvt2md {
 
     $codeBlocks = {
@@ -16,11 +16,11 @@ filter cvt2md {
 ``````
 $($code)
 ``````
-"@      
+"@
     }
- 
+
     if([string]::IsNullOrEmpty($_.trim())) {return}
-       
+
     if($_.trim().startswith("#")){
         $_
     } else {
@@ -33,12 +33,12 @@ $(& $codeBlocks $($_))
         Add-Type -AN system.windows.forms
     }
 
-    $result = [System.Windows.Forms.Clipboard]::GetText() -split "`r`n" | cvt2md
-    
+    $result = $psISE.CurrentFile.Editor.Text -split "`r`n" | cvt2md
+
     if($CopyToClipboard) {
         $result | clip
         return
     }
-    
+
     $result
 }
